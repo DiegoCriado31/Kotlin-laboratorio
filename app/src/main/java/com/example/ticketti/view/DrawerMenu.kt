@@ -1,18 +1,17 @@
 package com.example.ticketti.view
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.Grass
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
@@ -26,103 +25,87 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-
 fun DrawerMenu(
-    username:String,
+    username: String,
     navController: NavController
-){ //inicio
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
 
-    Column(modifier=Modifier.fillMaxSize())
-    {//Contenido columna
+        // Encabezado
         Box(
-        modifier= Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-            .background(MaterialTheme.colorScheme.primary)
-        )//fin Box
-        {//Inicio contenido
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(MaterialTheme.colorScheme.primary)
+        ) {
             Text(
-                text="Categorias  usuario $username",
-                style=MaterialTheme.typography.headlineSmall,
-                color=MaterialTheme.colorScheme.onPrimary,
-                modifier= Modifier
+                text = "TicketTI · $username",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
                     .align(Alignment.BottomStart)
-            )//fin texto
+                    .padding(16.dp)
+            )
+        }
 
-        }//fin Inicio contenido
+        // Opciones del menu
+        LazyColumn(modifier = Modifier.weight(1f)) {
 
-        //Lazy column : crea una lista de elementos
-
-        LazyColumn(modifier=Modifier.weight(1f)){
-            item{
+            item {
                 NavigationDrawerItem(
-                    label={Text("Hamburguesa BBQ")},
+                    label = { Text("Mis solicitudes") },
                     selected = false,
-                    onClick = {/* Accion */},
-                    icon={Icon(Icons.Default.LunchDining,
-                        contentDescription = "BBQ")}
-                )//fin drawemenu
-            }// fin item 1
+                    onClick = { navController.navigate("lista_solicitudes") },
+                    icon = {
+                        Icon(
+                            Icons.Default.Description,
+                            contentDescription = "Mis solicitudes"
+                        )
+                    }
+                )
+            }
 
-            item{
+            item {
                 NavigationDrawerItem(
-                    label={Text("Hamburguesa Veggie")},
+                    label = { Text("Nueva solicitud") },
                     selected = false,
-                    onClick = {/* Accion */},
-                    icon={Icon(Icons.Default.Grass,
-                        contentDescription = "Veggie")}
-                )//fin drawemenu
-            }// fin item 2
+                    onClick = { navController.navigate("solicitud_form") },
+                    icon = {
+                        Icon(
+                            Icons.Default.AddCircle,
+                            contentDescription = "Nueva solicitud"
+                        )
+                    }
+                )
+            }
 
-            item{
+            item {
                 NavigationDrawerItem(
-                    label={Text("Hamburguesa Picante")},
+                    label = { Text("Cerrar sesión") },
                     selected = false,
-                    onClick = {/* Accion */},
-                    icon={Icon(Icons.Default.LocalFireDepartment,
-                        contentDescription = "Picante")}
-                )//fin drawemenu
-            }// fin item 3
-
-            item{
-                NavigationDrawerItem(
-                    label={Text("Hamburguesa Clasica")},
-                    selected = false,
-                    onClick = {/* Accion */
-                        val nombre= Uri.encode("Hamburguesa Clasica")
-                        val precio="5000"
-                    navController.navigate( "ProductoFormScreen/$nombre/$precio")
-
+                    onClick = {
+                        navController.navigate("login") {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     },
-                    icon={Icon(Icons.Default.Fastfood,
-                        contentDescription = "Clasica")}
-                )//fin drawemenu
-            }// fin item 4
-
-
-
-
-
-        }// fin Lazy
-
-
-
-
-    }//Fin Contenido columna
-
-
-
-}//fin drawermenu
-
-
+                    icon = {
+                        Icon(
+                            Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = "Cerrar sesión"
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-
-
-fun DrawerMenuPreview(){
+fun DrawerMenuPreview() {
     val navController = rememberNavController()
-
-    DrawerMenu(username = "Usuario Prueba", navController=navController)
-
+    DrawerMenu(username = "Usuario Prueba", navController = navController)
 }
+
+

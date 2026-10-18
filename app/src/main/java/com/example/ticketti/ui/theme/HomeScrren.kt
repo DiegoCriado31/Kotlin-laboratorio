@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,17 +41,15 @@ import com.example.ticketti.ui.theme.login.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun HomeScreen(
     navController: NavController,
     vm: LoginViewModel = viewModel()
-
-){
+) {
 
     val state = vm.uiState
     var showPass by remember { mutableStateOf(false) }
 
-    val ColorScheme= darkColorScheme(
+    val ColorScheme = darkColorScheme(
         primary = Color(0xFF98222E),
         onPrimary = Color.White,
         onSurface = Color(0xFF333333), //gris
@@ -60,160 +57,117 @@ fun HomeScreen(
 
     MaterialTheme(
         colorScheme = ColorScheme
-    ){ // Inicio aplicacion Material
+    ) { // Inicio aplicacion Material
 
+        // Scaffold: permite generar una pantalla basica
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "TicketTI",
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                )
+            } // fin topBar
+        ) { innerPadding ->
+            //innerPadding  es un espacio interno que entrega Scaffold
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .background(Color(0xFFF0F0F0)),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { //inicio inner
 
-
-
-// Scaffold: permite generar una pantalla basica
-    Scaffold (
-        topBar={
-            TopAppBar(title={ Text("Mi Primer App",
-                color= MaterialTheme.colorScheme.onPrimary
-            )})
-        }// fin topBar
-
-
-    ){ innerPadding ->
-        //innerPadding  es un espacio interno que entrega Scaffold
-        Column(
-            modifier= Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp)
-                .background(Color(0xFFF0F0F0)),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-
-
-        ){  //inicio inner
-            Text(text="!!!  Bienvenido !!!!!!",
-                style= MaterialTheme.typography.headlineMedium,
-                color=MaterialTheme.colorScheme.primary
+                Text(
+                    text = "Bienvenido a TicketTI",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
 
-            Spacer(modifier= Modifier.height(16.dp)
-            )
+                Text(
+                    text = "Gestión y seguimiento de solicitudes",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                        fontWeight = FontWeight.Bold
+                    )
+                )
 
-            Image(
-                painter= painterResource(id= R.drawable.logoduoc),
-                contentDescription = "Logo Appp",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Fit
+                Spacer(modifier = Modifier.height(16.dp))
 
-            )
+                Image(
+                    painter = painterResource(id = R.drawable.logoti),
+                    contentDescription = "Logo TicketTI",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Fit
+                )
 
+                OutlinedTextField(
+                    value = state.username,
+                    onValueChange = vm::onUsernameChange,
+                    label = { Text("Usuario") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(0.95f)
+                ) // fin user
 
-            Row(
-                modifier= Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal=16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-            ){// Aplicar fila
+                OutlinedTextField(
+                    value = state.password,
+                    onValueChange = vm::onPasswordChange,
+                    label = { Text("Contraseña") },
+                    singleLine = true,
+                    visualTransformation = if (showPass)
+                        VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        TextButton(onClick = { showPass = !showPass }) {
+                            Text(if (showPass) "Ocultar" else "Ver")
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(0.95f)
+                ) //fin pass
 
-                Text("Texto uno",
-                    style= MaterialTheme.typography.bodyLarge.copy(
-                        color= MaterialTheme.colorScheme.onSurface.copy(alpha=0.8f),
-                        fontWeight = FontWeight.Bold),
-                    modifier= Modifier
-                        .padding(end=8.dp)
-
-                    )//fin Text1
-
-
-                Text("Texto dos",
-                    style= MaterialTheme.typography.bodyLarge.copy(
-                        color= MaterialTheme.colorScheme.onSurface.copy(alpha=0.8f),
-                        fontWeight = FontWeight.Bold),
-                    modifier= Modifier
-                        .padding(end=8.dp)
-
-                )//fin Text1
-
-
-            }// fin Aplicar fila
-
-
-            OutlinedTextField(
-                value=state.username,
-                onValueChange = vm::onUsernameChange,
-                label={Text("Usuario")},
-                singleLine = true,
-                modifier= Modifier.fillMaxWidth(0.95f)
-            ) // fin user
-
-
-
-            OutlinedTextField(
-                value=state.password,
-                onValueChange = vm::onPasswordChange,
-                label={Text("Contraseña")},
-                singleLine = true,
-                visualTransformation = if (showPass)
-                    VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    TextButton(onClick = { showPass =!showPass}){
-                    Text(if (showPass) "Ocultar" else "Ver"  )
-                    }//fin aplica
-                },// fin trail
-                modifier = Modifier.fillMaxWidth(0.95f)
-
-            )//fin pass
-
-
-            if(state.error !=null){
+                if (state.error != null) {
                     Spacer(Modifier.height(8.dp))
                     Text(
-                    text=state.error ?:"",
-                    color=MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-            )
-            }// fin state
+                        text = state.error ?: "",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                } // fin state
 
-            Spacer(modifier= Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick={/*  accion futura */
-            vm.submit{ user->
-                navController.navigate("DrawerMenu/$user")
-                { //inicio navegacion
-                popUpTo("login") {inclusive=true} // no va a volver al login con back
-                launchSingleTop=true
-                } //termino navegacion
+                Button(
+                    onClick = {
+                        vm.submit { user ->
+                            navController.navigate("DrawerMenu/$user") {
+                                popUpTo("login") { inclusive = true } // no vuelve al login con back
+                                launchSingleTop = true
+                            }
+                        } // fin submit
+                    },
+                    enabled = !state.isLoading,
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                ) {
+                    Text(if (state.isLoading) "Validando..." else "Iniciar sesión")
+                }
 
-            }// fin submit
-
-            },
-                enabled=!state.isLoading,
-                modifier= Modifier.fillMaxWidth(0.8f)
-            ){
-               // Text("Presioname")
-                Text( if(state.isLoading) "Validadndo" else "iniciar sesion"  )
-            }// fin text
-
-
-
-
-        }//fin inner
-
-
-    } // Fin Columna
-
-
-
+            } //fin inner
+        } // Fin Scaffold
     } // Final aplicacion Material
-
-}// fin HomeScreen
+} // fin HomeScreen
 
 
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() { // Crear un navController de manera ficticia para fines de la vista previa
     val navController = rememberNavController()
-
-    // Puedes usar un ViewModel simulado aquí si no tienes acceso a uno real
-    val vm = LoginViewModel() // Suponiendo que LoginViewModel está correctamente configurado para la vista previa
+    val vm = LoginViewModel()
 
     HomeScreen(navController = navController, vm = vm)
 }

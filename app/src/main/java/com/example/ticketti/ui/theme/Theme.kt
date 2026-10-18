@@ -33,10 +33,10 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun DSY1105009V2026Theme(
+fun TicketTITheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Color dinamico desactivado: la app se ve igual en todos los dispositivos
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
